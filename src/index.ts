@@ -6,11 +6,16 @@ import type {
   IFlags,
   IRetrieveInfo,
   LoadingState,
-} from './@types/flagsmith.types';
+  IFlagsmithFeature,
+} from 'flagsmith/types';
 
 import './css/styles.css';
 
 const environmentID = 'DCYBQgBcuRF86fmvgZc2os';
+
+type IFlagsmithFeatureCustom = IFlagsmithFeature & {
+  key: string;
+};
 
 type FlagStateType = {
   flags: IFlags<string>;
@@ -54,23 +59,37 @@ flagsmith.init({
   },
 });
 
-const featureToggle: { [key: string]: () => void } = {
-  'wallet-fortmatic': () => {
-    const feature = flagState.flags['wallet-fortmatic'];
-    const element = document.getElementById('wallet-fortmatic');
+const featureToggle: { [key: string]: (key: IFlagsmithFeatureCustom) => void } =
+  {
+    'wallet-fortmatic': (feature) => {
+      const element = document.getElementById(feature.key);
 
-    if (element) {
-      if (feature.enabled) {
-        element.classList.remove('hidden');
-      } else {
-        element.classList.add('hidden');
+      if (element) {
+        if (feature.enabled) {
+          element.classList.remove('hidden');
+        } else {
+          element.classList.add('hidden');
+        }
       }
-    }
-  },
-};
+    },
+    'wallet-connect': (feature) => {
+      const element = document.getElementById(feature.key);
+
+      if (element && element.parentNode) {
+        if (!feature.enabled) {
+          element.parentNode.removeChild(element);
+        }
+      }
+    },
+  };
 
 const processFlags = (flags: IFlags<string>): void => {
   Object.entries(flags).forEach(([featureName, feature]) => {
-    featureToggle[featureName]();
+    const featureFlag: IFlagsmithFeatureCustom = {
+      ...feature,
+      key: featureName,
+    };
+
+    featureToggle[featureName](featureFlag);
   });
 };
