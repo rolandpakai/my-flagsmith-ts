@@ -25,7 +25,21 @@
     <!-- No script message end -->
 
     <!-- Root -->
-    <div id="root" class="root"></div>
+    <div id="root" class="root">
+      <div class="fixed top-0 left-0 w-full h-full flex items-center justify-center bg-gray-800 bg-opacity-75">
+        <!-- Modal Content -->
+        <div class="bg-white p-8 rounded shadow-lg w-80">
+            <p class="text-xl font-bold mb-4">Modal Title</p>
+            <p class="mb-4">Modal content goes here.</p>
+            <!-- Buttons -->
+            <div class="flex justify-end">
+                <button class="mr-2 px-4 py-2 bg-gray-300 text-gray-700 rounded hover:bg-gray-400"
+                    onclick="closeModal()">Cancel</button>
+                <button class="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600">Save</button>
+            </div>
+        </div>
+    </div>
+    </div>
     <!-- Root end -->
   </body>
 </html>
