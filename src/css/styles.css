@@ -1,2 +1,5 @@
-/* Import all base styles. */
-@import url('./all/all.css');
+@import-normalize;
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
