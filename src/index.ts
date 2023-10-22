@@ -1,5 +1,6 @@
 'use strict';
 
+import 'flowbite';
 import flagsmith from 'flagsmith';
 import type {
   IFlags,
