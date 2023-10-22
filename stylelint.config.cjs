@@ -8,7 +8,7 @@ module.exports = {
     'at-rule-no-unknown': [
       true,
       {
-        ignoreAtRules: ['mixin', 'mixin-content', 'define-mixin'],
+        ignoreAtRules: ['tailwind', 'mixin', 'mixin-content', 'define-mixin'],
       },
     ],
     'selector-max-id': 0,
