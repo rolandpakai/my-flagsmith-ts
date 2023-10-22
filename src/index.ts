@@ -8,7 +8,6 @@ import type {
 } from './@types/flagsmith.types';
 
 const environmentID = 'DCYBQgBcuRF86fmvgZc2os';
-const feature_name = 'test_feature';
 
 flagsmith.init({
   environmentID,
@@ -29,23 +28,31 @@ flagsmith.init({
     const flags = flagsmith.getAllFlags();
     console.log('Received flags', flags);
 
-    const has_feature = flagsmith.hasFeature(feature_name);
+    processFlags(flags, oldFlags);
+  },
+});
 
-    console.log('has_feature: ' + has_feature);
+const processFlags = (flags: IFlags<string>, oldFlags: IFlags | null): void => {
+  Object.entries(flags).forEach(([featureName, feature]) => {
+    console.log('featureName: ' + featureName);
+    const hasFeature = flagsmith.hasFeature(featureName);
+    console.log('hasFeature: ' + hasFeature);
 
-    if (has_feature) {
-      const value = flagsmith.getValue(feature_name);
+    const enabled = feature.enabled;
+    console.log('enabled: ' + enabled);
+
+    if (hasFeature) {
+      const value = flagsmith.getValue(featureName);
       console.log('value = ' + value);
 
-      if (oldFlags) {
+      if (value != null && oldFlags) {
         // Check whether value has changed
-        const value_old =
-          oldFlags[feature_name] && oldFlags[feature_name].value;
+        const valueOld = oldFlags[featureName] && oldFlags[featureName].value;
 
-        if (value !== value_old) {
+        if (value !== valueOld) {
           // Value has changed, do something here
         }
       }
     }
-  },
-});
+  });
+};
