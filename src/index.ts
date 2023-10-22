@@ -7,6 +7,8 @@ import type {
   LoadingState,
 } from './@types/flagsmith.types';
 
+import './css/styles.css';
+
 const environmentID = 'DCYBQgBcuRF86fmvgZc2os';
 
 flagsmith.init({
