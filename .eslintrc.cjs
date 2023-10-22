@@ -45,10 +45,11 @@ module.exports = {
       },
     },
     {
-      files: ['**/*.js', '**/*.jsx', '**/*.cjs'],
+      files: ['**/*.js', '**/*.jsx', '**/*.cjs', '**/*.ts'],
       rules: {
         '@typescript-eslint/no-var-requires': 0,
         '@typescript-eslint/explicit-module-boundary-types': 0,
+        '@typescript-eslint/no-unused-vars': 'off',
       },
     },
   ],
