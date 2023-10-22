@@ -12,15 +12,18 @@ import './css/styles.css';
 
 const environmentID = 'DCYBQgBcuRF86fmvgZc2os';
 
-let stateFlags: IFlags<string> = {};
-let stateOldFlags: IFlags<string> | null = {};
-
-const setFlags = (flags: IFlags<string>): void => {
-  stateFlags = flags;
+type FlagStateType = {
+  flags: IFlags<string>;
+  oldFlags: IFlags<string> | null;
 };
 
-const setOldFlags = (oldFlags: IFlags | null): void => {
-  stateOldFlags = oldFlags;
+let flagState: FlagStateType = {
+  flags: {},
+  oldFlags: {},
+};
+
+const setState = (state: FlagStateType): void => {
+  flagState = state;
 };
 
 flagsmith.init({
@@ -41,15 +44,19 @@ flagsmith.init({
     const flags = flagsmith.getAllFlags();
     console.log('Received flags', flags);
 
-    setFlags(flags);
-    setOldFlags(oldFlags);
+    const changedState = {
+      flags,
+      oldFlags,
+    };
+
+    setState(changedState);
     processFlags(flags);
   },
 });
 
 const featureToggle: { [key: string]: () => void } = {
   'wallet-fortmatic': () => {
-    const feature = stateFlags['wallet-fortmatic'];
+    const feature = flagState.flags['wallet-fortmatic'];
     const element = document.getElementById('wallet-fortmatic');
 
     if (element) {
