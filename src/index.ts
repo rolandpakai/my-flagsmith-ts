@@ -35,20 +35,31 @@ flagsmith.init({
   },
 });
 
+const featureToggle: { [key: string]: () => void } = {
+  'wallet-fortmatic': () => {
+    const element = document.getElementById('wallet-fortmatic');
+
+    if (element) {
+      element.classList.remove('hidden');
+    }
+  },
+};
+
 const processFlags = (flags: IFlags<string>, oldFlags: IFlags | null): void => {
   Object.entries(flags).forEach(([featureName, feature]) => {
     console.log('featureName: ' + featureName);
+    console.log('feature: ' + JSON.stringify(feature));
     const hasFeature = flagsmith.hasFeature(featureName);
     console.log('hasFeature: ' + hasFeature);
 
-    const enabled = feature.enabled;
-    console.log('enabled: ' + enabled);
-
     if (hasFeature) {
+      featureToggle[featureName]();
+
+      // Handle feature value
       const value = flagsmith.getValue(featureName);
       console.log('value = ' + value);
 
-      if (value != null && oldFlags) {
+      if (value !== null && oldFlags) {
         // Check whether value has changed
         const valueOld = oldFlags[featureName] && oldFlags[featureName].value;
 
