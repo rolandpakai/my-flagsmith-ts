@@ -1,6 +1,8 @@
 module.exports = {
   module: true,
   plugins: {
+    tailwindcss: {},
+    autoprefixer: {},
     'postcss-custom-media': {},
     'postcss-import': {},
     'postcss-mixins': {},
