@@ -12,15 +12,25 @@ import './css/styles.css';
 
 const environmentID = 'DCYBQgBcuRF86fmvgZc2os';
 
+let stateFlags: IFlags<string> = {};
+let stateOldFlags: IFlags<string> | null = {};
+
+const setFlags = (flags: IFlags<string>): void => {
+  stateFlags = flags;
+};
+
+const setOldFlags = (oldFlags: IFlags | null): void => {
+  stateOldFlags = oldFlags;
+};
+
 flagsmith.init({
   environmentID,
   cacheFlags: false,
   // cacheOptions: {ttl:0, skipAPI:false},
   // enableLogs: true,
-  // enableAnalytics: true,
   identity: 'flagsmith_sample_user',
   onChange: (
-    oldFlags: IFlags | null,
+    oldFlags: IFlags<string> | null,
     params: IRetrieveInfo,
     loadingState: LoadingState,
   ) => {
@@ -31,42 +41,29 @@ flagsmith.init({
     const flags = flagsmith.getAllFlags();
     console.log('Received flags', flags);
 
-    processFlags(flags, oldFlags);
+    setFlags(flags);
+    setOldFlags(oldFlags);
+    processFlags(flags);
   },
 });
 
 const featureToggle: { [key: string]: () => void } = {
   'wallet-fortmatic': () => {
+    const feature = stateFlags['wallet-fortmatic'];
     const element = document.getElementById('wallet-fortmatic');
 
     if (element) {
-      element.classList.remove('hidden');
+      if (feature.enabled) {
+        element.classList.remove('hidden');
+      } else {
+        element.classList.add('hidden');
+      }
     }
   },
 };
 
-const processFlags = (flags: IFlags<string>, oldFlags: IFlags | null): void => {
+const processFlags = (flags: IFlags<string>): void => {
   Object.entries(flags).forEach(([featureName, feature]) => {
-    console.log('featureName: ' + featureName);
-    console.log('feature: ' + JSON.stringify(feature));
-    const hasFeature = flagsmith.hasFeature(featureName);
-    console.log('hasFeature: ' + hasFeature);
-
-    if (hasFeature) {
-      featureToggle[featureName]();
-
-      // Handle feature value
-      const value = flagsmith.getValue(featureName);
-      console.log('value = ' + value);
-
-      if (value !== null && oldFlags) {
-        // Check whether value has changed
-        const valueOld = oldFlags[featureName] && oldFlags[featureName].value;
-
-        if (value !== valueOld) {
-          // Value has changed, do something here
-        }
-      }
-    }
+    featureToggle[featureName]();
   });
 };
